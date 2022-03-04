@@ -92,9 +92,8 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("UpdateEmployee")]
-        public int UpdateEmployee([FromBody] Employee value)
-        {
-            int result=0;
+        public ActionResult UpdateEmployee([FromBody] Employee value)
+        {            
             try
             {
                 Employee employee = _applicationDbContext.Employees.FirstOrDefault(x => x.EmployeeId == value.EmployeeId);
@@ -103,13 +102,18 @@ namespace WebAPI.Controllers
                     employee.FirstName = value.FirstName;
                     employee.LastName = value.LastName;
                     employee.EmailID = value.EmailID;                    
-                    result = _applicationDbContext.SaveChanges();
-                }                                
+                     _applicationDbContext.SaveChanges();
+                    return Ok("Employee Updated successfully!!");
+                }
+                else
+                {
+                    return NotFound("Employee Details not available!!");
+                }
             }
             catch (Exception ex)
             {
-            }
-            return result;
+                return BadRequest(ex.Message);
+            }            
         }
 
         [HttpDelete]
